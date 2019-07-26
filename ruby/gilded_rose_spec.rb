@@ -159,8 +159,83 @@ describe GildedRose do
         end
       end
     end
-  end
 
-  # “Backstage passes”, like aged brie, increases in Quality as it’s SellIn value approaches; Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less but Quality drops to 0 after the concert
-  # “Conjured” items degrade in Quality twice as fast as normal items
+    # “Backstage passes”, like aged brie, increases in Quality
+    # Quality increases by 2 when there are 10 days or less
+    # Quality increases by 3 when there are 5 days or less
+    # Quality drops to 0 after the concert
+    context 'of Backstage passes to a TAFKAL80ETC concert' do
+      let(:items) { [item] }
+      let(:item_name) { 'Backstage passes to a TAFKAL80ETC concert' }
+      let(:item) { Item.new(item_name, sell_in, quality) }
+
+      context 'with 10 quality' do
+        let(:quality) { 10 }
+
+        context 'and eleven days left to sell' do
+          let(:sell_in) { 11 }
+
+          it 'increases quality by 1' do
+            expect(item.quality).to eq(11)
+          end
+
+          it 'decreases days left to sell by one' do
+            expect(item.sell_in).to eq(10)
+          end
+        end
+
+        context 'and ten days left to sell' do
+          let(:sell_in) { 10 }
+
+          it 'increases quality by 2' do
+            expect(item.quality).to eq(12)
+          end
+        end
+
+        context 'and six days left to sell' do
+          let(:sell_in) { 6 }
+
+          it 'increases quality by 2' do
+            expect(item.quality).to eq(12)
+          end
+        end
+
+        context 'and five days left to sell' do
+          let(:sell_in) { 5 }
+
+          it 'increases quality by 3' do
+            expect(item.quality).to eq(13)
+          end
+        end
+
+        context 'and one day left to sell' do
+          let(:sell_in) { 1 }
+
+          it 'increases quality by 3' do
+            expect(item.quality).to eq(13)
+          end
+        end
+
+        context 'and zero days left to sell' do
+          let(:sell_in) { 0 }
+
+          it 'drops quality to 0' do
+            expect(item.quality).to eq(0)
+          end
+        end
+      end
+
+      context 'with 50 quality' do
+        let(:quality) { 50 }
+
+        context 'and no days left to sell' do
+          let(:sell_in) { 0 }
+
+          it 'sets quality to 0' do
+            expect(item.quality).to eq(0)
+          end
+        end
+      end
+    end
+  end
 end
