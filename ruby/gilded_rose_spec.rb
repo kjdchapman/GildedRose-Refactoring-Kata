@@ -10,6 +10,10 @@ describe GildedRose do
     it 'does not change the name' do
       expect(items[0].name).to eq 'foo'
     end
+
+    it 'does not change the quantity' do
+      expect(items.count).to eq 1
+    end
   end
 
   # Quality decreases once each day
