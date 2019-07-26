@@ -56,8 +56,6 @@ end
 class Item
   attr_accessor :name, :sell_in, :quality
 
-  # sell_in = "the number of days we have to sell the item"
-  # quality = "how valuable the item is"
   def initialize(name, sell_in, quality)
     @name = name
     @sell_in = sell_in
