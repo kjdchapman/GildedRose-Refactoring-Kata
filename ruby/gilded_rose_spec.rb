@@ -4,7 +4,52 @@ describe GildedRose do
   describe '#update_quality' do
     before { GildedRose.new(items).update_quality }
 
-    context 'of one item with zero quality and zero time left to sell' do
+    context 'of one normal item with ten quality' do
+      let(:item) { Item.new('foo', sell_in, 10 )}
+      let(:items) { [item] }
+
+      context 'with ten days left to sell' do
+        let(:sell_in) { 10 }
+
+        it 'decreases quality by one' do
+          expect(item.quality).to eq 9
+        end
+
+        it 'decreases days left to sell by 1' do
+          expect(item.sell_in).to eq 9
+        end
+      end
+
+      context 'with one day left to sell' do
+        let(:sell_in) { 1 }
+
+        it 'decreases quality by one' do
+          expect(item.quality).to eq 9
+        end
+
+        it 'decreases days left to sell by 1' do
+          expect(item.sell_in).to eq 0
+        end
+      end
+
+      context 'with zero days left to sell' do
+        let(:sell_in) { 0 }
+
+        it 'decreases quality by two' do
+          expect(item.quality).to eq 8
+        end
+      end
+
+      context 'one day past its sell-by date' do
+        let(:sell_in) { -1 }
+
+        it 'decreases quality by two' do
+          expect(item.quality).to eq 8
+        end
+      end
+    end
+
+    context 'of one normal item with zero quality and zero time left to sell' do
       let(:item) { Item.new('foo', 0, 0) }
       let(:items) { [item] }
 
@@ -16,7 +61,6 @@ describe GildedRose do
         expect(items.count).to eq 1
       end
 
-      # The Quality of an item is never negative
       it 'does not reduce its quality' do
         expect(item.quality).to eq 0
       end
@@ -26,64 +70,6 @@ describe GildedRose do
       end
     end
 
-    # Quality decreases once each day
-    # sell_in decreases once per day
-    context 'of one item with ten quality' do
-      let(:item) { Item.new('foo', sell_in, 10 )}
-      let(:items) { [item] }
-
-      context 'with ten days left to sell' do
-        let(:sell_in) { 10 }
-
-        it 'changes quality to 9' do
-          expect(item.quality).to eq 9
-        end
-
-        it 'changes the days left to sell to 9' do
-          expect(item.sell_in).to eq 9
-        end
-      end
-
-      context 'with one day left to sell' do
-        let(:sell_in) { 1 }
-
-        it 'changes quality to 9' do
-          expect(item.quality).to eq 9
-        end
-
-        it 'changes the days left to sell to 0' do
-          expect(item.sell_in).to eq 0
-        end
-      end
-
-      # Once the sell by date has passed, Quality degrades twice as fast
-      context 'with zero days left to sell' do
-        let(:sell_in) { 0 }
-
-        it 'changes quality to 8' do
-          expect(item.quality).to eq 8
-        end
-
-        it 'changes the days left to sell to -1' do
-          expect(item.sell_in).to eq -1
-        end
-      end
-
-      # Once the sell by date has passed, Quality degrades twice as fast
-      context 'one day past its sell-by date' do
-        let(:sell_in) { -1 }
-
-        it 'changes quality to 8' do
-          expect(item.quality).to eq 8
-        end
-
-        it 'changes the days left to sell to -2' do
-          expect(item.sell_in).to eq -2
-        end
-      end
-    end
-
-    # “Aged Brie” actually increases in Quality the older it gets
     context 'of aged brie' do
       let(:items) { [item] }
       let(:item) { Item.new('Aged Brie', sell_in, quality ) }
@@ -99,7 +85,6 @@ describe GildedRose do
           end
         end
 
-        # and apparently increases at double speed if it goes out of date!
         context 'with zero days left to sell' do
           let(:sell_in) { 0 }
 
@@ -117,7 +102,6 @@ describe GildedRose do
         end
       end
 
-      # The Quality of an item is never more than 50
       context 'with fifty quality and one day left to sell' do
         let(:quality) { 50 }
         let(:sell_in) { 1 }
@@ -128,7 +112,6 @@ describe GildedRose do
       end
     end
 
-    # “Sulfuras”, being a legendary item, never has to be sold or decreases in Quality
     context 'of Sulfuras, Hand of Ragnaros' do
       let(:items) { [item] }
       let(:item) { Item.new('Sulfuras, Hand of Ragnaros', sell_in, quality ) }
@@ -160,10 +143,6 @@ describe GildedRose do
       end
     end
 
-    # “Backstage passes”, like aged brie, increases in Quality
-    # Quality increases by 2 when there are 10 days or less
-    # Quality increases by 3 when there are 5 days or less
-    # Quality drops to 0 after the concert
     context 'of Backstage passes to a TAFKAL80ETC concert' do
       let(:items) { [item] }
       let(:item_name) { 'Backstage passes to a TAFKAL80ETC concert' }
@@ -238,7 +217,6 @@ describe GildedRose do
       end
     end
 
-    # multiple items
     context 'two normal items' do
       let(:items) { [Item.new('foo', 5, 5 ), Item.new('bar', 5, 5 )] }
 
