@@ -67,9 +67,39 @@ describe GildedRose do
         end
       end
     end
+
+    # “Aged Brie” actually increases in Quality the older it gets
+    context 'of aged brie with ten quality' do
+      let(:items) { [item] }
+      let(:item) { Item.new('Aged Brie', sell_in, 10 ) }
+
+      context 'with one day left to sell' do
+        let(:sell_in) { 1 }
+
+        it 'changes quality to 11' do
+          expect(item.quality).to eq(11)
+        end
+      end
+
+      # and apparently increases at double speed if it goes out of date!
+      context 'with zero days left to sell' do
+        let(:sell_in) { 0 }
+
+        it 'changes quality to 12' do
+          expect(item.quality).to eq(12)
+        end
+      end
+
+      context 'one day past its sell-by date' do
+        let(:sell_in) { -1 }
+
+        it 'changes quality to 12' do
+          expect(item.quality).to eq(12)
+        end
+      end
+    end
   end
 
-  # “Aged Brie” actually increases in Quality the older it gets
   # The Quality of an item is never more than 50
   # “Sulfuras”, being a legendary item, never has to be sold or decreases in Quality
   # “Backstage passes”, like aged brie, increases in Quality as it’s SellIn value approaches; Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less but Quality drops to 0 after the concert
