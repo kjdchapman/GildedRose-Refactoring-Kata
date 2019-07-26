@@ -4,11 +4,11 @@ describe GildedRose do
   subject { GildedRose.new(items) }
 
   describe '#update_quality' do
+    before { subject.update_quality }
+
     context 'of one item with zero quality and zero time left to sell' do
       let(:item) { Item.new('foo', 0, 0) }
       let(:items) { [item] }
-
-      before { subject.update_quality }
 
       it 'does not change its name' do
         expect(item.name).to eq 'foo'
@@ -23,14 +23,52 @@ describe GildedRose do
         expect(item.quality).to eq 0
       end
 
-      it 'makes the time left to sell negative 1' do
+      it 'changes time left to sell to negative 1' do
         expect(item.sell_in).to eq -1
+      end
+    end
+
+    # Quality decreases once each day
+    context 'of one item with ten quality' do
+      let(:item) { Item.new('foo', sell_in, 10 )}
+      let(:items) { [item] }
+
+      context 'with ten days left to sell' do
+        let(:sell_in) { 10 }
+
+        it 'changes quality to 9' do
+          expect(item.quality).to eq 9
+        end
+      end
+
+      context 'with one day left to sell' do
+        let(:sell_in) { 1 }
+
+        it 'changes quality to 9' do
+          expect(item.quality).to eq 9
+        end
+      end
+
+      # Once the sell by date has passed, Quality degrades twice as fast
+      context 'with zero days left to sell' do
+        let(:sell_in) { 0 }
+
+        it 'changes quality to 8' do
+          expect(item.quality).to eq 8
+        end
+      end
+
+      # Once the sell by date has passed, Quality degrades twice as fast
+      context 'one day past its sell-by date' do
+        let(:sell_in) { -1 }
+
+        it 'changes quality to 8' do
+          expect(item.quality).to eq 8
+        end
       end
     end
   end
 
-  # Quality decreases once each day
-  # Once the sell by date has passed, Quality degrades twice as fast
   # “Aged Brie” actually increases in Quality the older it gets
   # The Quality of an item is never more than 50
   # “Sulfuras”, being a legendary item, never has to be sold or decreases in Quality
