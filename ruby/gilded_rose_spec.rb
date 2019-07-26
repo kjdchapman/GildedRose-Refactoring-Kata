@@ -27,6 +27,7 @@ describe GildedRose do
     end
 
     # Quality decreases once each day
+    # sell_in decreases once per day
     context 'of one item with ten quality' do
       let(:item) { Item.new('foo', sell_in, 10 )}
       let(:items) { [item] }
@@ -37,6 +38,10 @@ describe GildedRose do
         it 'changes quality to 9' do
           expect(item.quality).to eq 9
         end
+
+        it 'changes the days left to sell to 9' do
+          expect(item.sell_in).to eq 9
+        end
       end
 
       context 'with one day left to sell' do
@@ -44,6 +49,10 @@ describe GildedRose do
 
         it 'changes quality to 9' do
           expect(item.quality).to eq 9
+        end
+
+        it 'changes the days left to sell to 0' do
+          expect(item.sell_in).to eq 0
         end
       end
 
@@ -54,6 +63,10 @@ describe GildedRose do
         it 'changes quality to 8' do
           expect(item.quality).to eq 8
         end
+
+        it 'changes the days left to sell to -1' do
+          expect(item.sell_in).to eq -1
+        end
       end
 
       # Once the sell by date has passed, Quality degrades twice as fast
@@ -62,6 +75,10 @@ describe GildedRose do
 
         it 'changes quality to 8' do
           expect(item.quality).to eq 8
+        end
+
+        it 'changes the days left to sell to -2' do
+          expect(item.sell_in).to eq -2
         end
       end
     end
