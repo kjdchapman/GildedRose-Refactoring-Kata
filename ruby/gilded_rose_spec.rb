@@ -237,5 +237,53 @@ describe GildedRose do
         end
       end
     end
+
+    # multiple items
+    context 'two normal items' do
+      let(:items) { [Item.new('foo', 5, 5 ), Item.new('bar', 5, 5 )] }
+
+      it 'decrease in quality and time left to sell' do
+        expect(items.map(&:to_s)).to match_array([
+          'foo, 4, 4',
+          'bar, 4, 4'
+        ])
+      end
+    end
+
+    context 'two normal items and a very old brie' do
+      let(:items) do
+        [
+          Item.new('foo', 5, 5 ),
+          Item.new('bar', 5, 5 ),
+          Item.new('Aged Brie', -5, 5 ),
+        ]
+      end
+
+      it 'change quality and time left to sell correctly' do
+        expect(items.map(&:to_s)).to match_array([
+          'foo, 4, 4',
+          'bar, 4, 4',
+          'Aged Brie, -6, 7'
+        ])
+      end
+    end
+
+    context 'all the special items' do
+      let(:items) do
+        [
+          Item.new('Sulfuras, Hand of Ragnaros', 5, 50 ),
+          Item.new('Backstage passes to a TAFKAL80ETC concert', 0, 50 ),
+          Item.new('Aged Brie', -5, 50 ),
+        ]
+      end
+
+      it 'change quality and time left to sell correctly' do
+        expect(items.map(&:to_s)).to match_array([
+          'Sulfuras, Hand of Ragnaros, 5, 50',
+          'Backstage passes to a TAFKAL80ETC concert, -1, 0',
+          'Aged Brie, -6, 50'
+        ])
+      end
+    end
   end
 end
