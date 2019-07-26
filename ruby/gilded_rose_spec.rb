@@ -127,9 +127,40 @@ describe GildedRose do
         end
       end
     end
+
+    # “Sulfuras”, being a legendary item, never has to be sold or decreases in Quality
+    context 'of Sulfuras, Hand of Ragnaros' do
+      let(:items) { [item] }
+      let(:item) { Item.new('Sulfuras, Hand of Ragnaros', sell_in, quality ) }
+
+      context 'with ten quality and one day left to sell' do
+        let(:quality) { 10 }
+        let(:sell_in) { 1 }
+
+        it 'does not change quality' do
+          expect(item.quality).to eq(10)
+        end
+
+        it 'does not change the days left to sell' do
+          expect(item.sell_in).to eq(1)
+        end
+      end
+
+      context 'with five hundred quality and zero days left to sell' do
+        let(:quality) { 500 }
+        let(:sell_in) { 0 }
+
+        it 'does not change quality' do
+          expect(item.quality).to eq(500)
+        end
+
+        it 'does not change the days left to sell' do
+          expect(item.sell_in).to eq(0)
+        end
+      end
+    end
   end
 
-  # “Sulfuras”, being a legendary item, never has to be sold or decreases in Quality
   # “Backstage passes”, like aged brie, increases in Quality as it’s SellIn value approaches; Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less but Quality drops to 0 after the concert
   # “Conjured” items degrade in Quality twice as fast as normal items
 end
