@@ -1,10 +1,8 @@
 require File.join(File.dirname(__FILE__), 'gilded_rose')
 
 describe GildedRose do
-  subject { GildedRose.new(items) }
-
   describe '#update_quality' do
-    before { subject.update_quality }
+    before { GildedRose.new(items).update_quality }
 
     context 'of one item with zero quality and zero time left to sell' do
       let(:item) { Item.new('foo', 0, 0) }
