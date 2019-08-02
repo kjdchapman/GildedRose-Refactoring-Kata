@@ -5,32 +5,62 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert" && item.quality.positive?
-        item.quality -= 1 if item.name != "Sulfuras, Hand of Ragnaros"
-      else
-        if item.quality < 50
-          item.quality += 1
+      if item.name == "Backstage passes to a TAFKAL80ETC concert"
+        update_backstage_pass_quality(item)
+      end
 
+      if item.name != "Aged Brie" \
+        && item.name != "Backstage passes to a TAFKAL80ETC concert" \
+        && item.name != "Sulfuras, Hand of Ragnaros"
+        item.quality -= 1 if item.quality.positive?
+      end
+
+      if item.name != "Sulfuras, Hand of Ragnaros"
+        item.sell_in -= 1
+      end
+
+      if item.name == "Aged Brie"
+        update_aged_brie_quality(item)
+      end
+
+      if item.name != "Backstage passes to a TAFKAL80ETC concert" \
+        && item.name != "Sulfuras, Hand of Ragnaros" \
+        && item.name != "Aged Brie"
+        if item.sell_in.negative?
+          item.quality -= 1 if item.quality.positive?
         end
       end
 
-      if item.name == "Backstage passes to a TAFKAL80ETC concert" && item.quality < 50
-        item.quality += 2 if item.sell_in < 6
-        item.quality += 1 if item.sell_in >= 6 && item.sell_in < 11
-      end
-
-      item.sell_in -= 1 if item.name != "Sulfuras, Hand of Ragnaros"
-
-      if item.sell_in.negative?
-        if item.name != "Aged Brie"
-          if item.name != "Backstage passes to a TAFKAL80ETC concert"
-            item.quality -= 1 if item.quality.positive? && item.name != "Sulfuras, Hand of Ragnaros"
-          else
-            item.quality = 0
-          end
-        elsif item.quality < 50
-          item.quality += 1
+      unless item.name != "Backstage passes to a TAFKAL80ETC concert" \
+        && item.name != "Sulfuras, Hand of Ragnaros" \
+        && item.name != "Aged Brie" \
+        || item.name == "Aged Brie"
+        if item.sell_in.negative?
+          item.quality = 0
         end
+      end
+    end
+  end
+
+  def update_backstage_pass_quality(item)
+    if item.quality < 50
+      item.quality += 1
+    end
+
+    if item.quality < 50
+      item.quality += 2 if item.sell_in < 6
+      item.quality += 1 if item.sell_in >= 6 && item.sell_in < 11
+    end
+  end
+
+  def update_aged_brie_quality(item)
+    if item.quality < 50
+      item.quality += 1
+    end
+
+    if item.sell_in.negative?
+      if item.quality < 50
+        item.quality += 1
       end
     end
   end
