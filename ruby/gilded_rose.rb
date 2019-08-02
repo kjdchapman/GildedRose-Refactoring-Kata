@@ -11,11 +11,12 @@ class GildedRose
         if item.quality < 50
           item.quality += 1
 
-          if item.name == "Backstage passes to a TAFKAL80ETC concert" && item.sell_in < 11 && item.quality < 50
-            item.quality += 1
-            item.quality += 1 if item.sell_in < 6
-          end
         end
+      end
+
+      if item.name == "Backstage passes to a TAFKAL80ETC concert" && item.quality < 50
+        item.quality += 2 if item.sell_in < 6
+        item.quality += 1 if item.sell_in >= 6 && item.sell_in < 11
       end
 
       item.sell_in -= 1 if item.name != "Sulfuras, Hand of Ragnaros"
