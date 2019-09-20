@@ -7,22 +7,16 @@ class GildedRose
     @items.each do |item|
       if item.name == "Backstage passes to a TAFKAL80ETC concert"
         update_backstage_pass_quality(item)
-      end
-
-      if item.name != "Aged Brie"
-        if item.name != "Backstage passes to a TAFKAL80ETC concert"
-          if item.name != "Sulfuras, Hand of Ragnaros"
-            item.quality -= 1 if item.quality.positive?
-          end
-        end
+      elsif item.name == "Aged Brie"
+        update_aged_brie_quality(item)
+      elsif item.name == "Backstage passes to a TAFKAL80ETC concert"
+      elsif item.name == "Sulfuras, Hand of Ragnaros"
+      else
+        update_normal_item_quality(item)
       end
 
       if item.name != "Sulfuras, Hand of Ragnaros"
         item.sell_in -= 1
-      end
-
-      if item.name == "Aged Brie"
-        update_aged_brie_quality(item)
       end
 
       if item.name != "Sulfuras, Hand of Ragnaros"
@@ -58,14 +52,18 @@ class GildedRose
   end
 
   def update_aged_brie_quality(item)
-    if item.quality < 50
+    return if item.quality >= 50
+
+    if item.sell_in < 1
+      item.quality += 2
+    else
       item.quality += 1
     end
+  end
 
-    if item.sell_in.negative?
-      if item.quality < 50
-        item.quality += 1
-      end
+  def update_normal_item_quality(item)
+    if item.quality.positive?
+      item.quality -= 1
     end
   end
 end
