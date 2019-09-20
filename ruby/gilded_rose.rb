@@ -5,38 +5,47 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      if item.name == "Backstage passes to a TAFKAL80ETC concert"
+      if backstage_pass?(item)
         update_backstage_pass_quality(item)
-      elsif item.name == "Aged Brie"
+      elsif aged_brie?(item)
         update_aged_brie_quality(item)
-      elsif item.name == "Backstage passes to a TAFKAL80ETC concert"
-      elsif item.name == "Sulfuras, Hand of Ragnaros"
+      elsif sulfuras?(item)
       else
         update_normal_item_quality(item)
       end
 
-      if item.name != "Sulfuras, Hand of Ragnaros"
+      unless sulfuras?(item)
         item.sell_in -= 1
       end
 
-      if item.name != "Sulfuras, Hand of Ragnaros"
-        if item.name != "Backstage passes to a TAFKAL80ETC concert"
-          if item.name != "Aged Brie"
-            if item.sell_in.negative?
-              item.quality -= 1 if item.quality.positive?
-            end
+      unless sulfuras?(item)
+        unless backstage_pass?(item) || aged_brie?(item)
+          if item.sell_in.negative?
+            item.quality -= 1 if item.quality.positive?
           end
         end
       end
 
-      if item.name == "Backstage passes to a TAFKAL80ETC concert"
+      if backstage_pass?(item)
         item.quality = 0 if item.sell_in.negative?
       end
 
-      if item.name == "Sulfuras, Hand of Ragnaros"
+      if sulfuras?(item)
         item.quality = 0 if item.sell_in.negative?
       end
     end
+  end
+
+  def sulfuras?(item)
+    item.name == "Sulfuras, Hand of Ragnaros"
+  end
+
+  def backstage_pass?(item)
+    item.name == "Backstage passes to a TAFKAL80ETC concert"
+  end
+
+  def aged_brie?(item)
+    item.name == "Aged Brie"
   end
 
   def update_backstage_pass_quality(item)
