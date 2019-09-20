@@ -46,13 +46,14 @@ class GildedRose
   end
 
   def update_backstage_pass_quality(item)
-    if item.quality < 50
-      item.quality += 1
-    end
+    return if item.quality > 50
 
-    if item.quality < 50
-      item.quality += 2 if item.sell_in < 6
-      item.quality += 1 if item.sell_in >= 6 && item.sell_in < 11
+    if item.sell_in < 6
+      item.quality += 3
+    elsif item.sell_in < 11
+      item.quality += 2
+    else
+      item.quality += 1
     end
   end
 
