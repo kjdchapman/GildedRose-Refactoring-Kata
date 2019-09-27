@@ -1,57 +1,35 @@
 class GildedRose
+  AGED_BRIE = "Aged Brie"
+  BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
+  SULFURAS = "Sulfuras, Hand of Ragnaros"
+
   def initialize(items)
     @items = items
   end
 
   def update_quality
     @items.each do |item|
-      if backstage_pass?(item)
-        update_backstage_pass_quality(item)
-      elsif aged_brie?(item)
+      case item.name
+      when AGED_BRIE
         update_aged_brie_quality(item)
-      elsif sulfuras?(item)
+      when BACKSTAGE_PASS
+        update_backstage_pass_quality(item)
+      when SULFURAS
+        nil
       else
         update_normal_item_quality(item)
       end
 
-      unless sulfuras?(item)
-        item.sell_in -= 1
-      end
-
-      unless sulfuras?(item)
-        unless backstage_pass?(item) || aged_brie?(item)
-          if item.sell_in.negative?
-            item.quality -= 1 if item.quality.positive?
-          end
-        end
-      end
-
-      if backstage_pass?(item)
-        item.quality = 0 if item.sell_in.negative?
-      end
-
-      if sulfuras?(item)
-        item.quality = 0 if item.sell_in.negative?
-      end
+      item.sell_in -= 1 unless item.name == SULFURAS
     end
-  end
-
-  def sulfuras?(item)
-    item.name == "Sulfuras, Hand of Ragnaros"
-  end
-
-  def backstage_pass?(item)
-    item.name == "Backstage passes to a TAFKAL80ETC concert"
-  end
-
-  def aged_brie?(item)
-    item.name == "Aged Brie"
   end
 
   def update_backstage_pass_quality(item)
     return if item.quality > 50
 
-    if item.sell_in < 6
+    if item.sell_in < 1
+      item.quality = 0
+    elsif item.sell_in < 6
       item.quality += 3
     elsif item.sell_in < 11
       item.quality += 2
@@ -71,6 +49,10 @@ class GildedRose
   end
 
   def update_normal_item_quality(item)
+    unless item.sell_in.positive?
+      item.quality -= 1 if item.quality.positive?
+    end
+
     if item.quality.positive?
       item.quality -= 1
     end
