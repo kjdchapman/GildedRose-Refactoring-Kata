@@ -11,22 +11,18 @@ class GildedRose
     @items.each do |item|
       case item.name
       when AGED_BRIE
-        update_aged_brie_quality(item)
+        update_aged_brie(item)
       when BACKSTAGE_PASS
-        update_backstage_pass_quality(item)
+        update_backstage_pass(item)
       when SULFURAS
         nil
       else
-        update_normal_item_quality(item)
+        update_normal_item(item)
       end
-
-      item.sell_in -= 1 unless item.name == SULFURAS
     end
   end
 
-  def update_backstage_pass_quality(item)
-    return if item.quality > 50
-
+  def update_backstage_pass(item)
     if item.sell_in < 1
       item.quality = 0
     elsif item.sell_in < 6
@@ -36,26 +32,33 @@ class GildedRose
     else
       item.quality += 1
     end
+
+    item.sell_in -= 1
   end
 
-  def update_aged_brie_quality(item)
-    return if item.quality >= 50
+  def update_aged_brie(item)
+    return item.sell_in -= 1 if item.quality >= 50
 
     if item.sell_in < 1
       item.quality += 2
     else
       item.quality += 1
     end
+
+    item.sell_in -= 1
   end
 
-  def update_normal_item_quality(item)
-    unless item.sell_in.positive?
+  def update_normal_item(item)
+    if item.sell_in.positive?
+    else
       item.quality -= 1 if item.quality.positive?
     end
 
     if item.quality.positive?
       item.quality -= 1
     end
+
+    item.sell_in -= 1
   end
 end
 
