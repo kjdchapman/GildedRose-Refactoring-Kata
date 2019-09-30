@@ -110,6 +110,15 @@ describe GildedRose do
           expect(item.quality).to eq(50)
         end
       end
+
+      context 'with fifty quality and one day left to sell' do
+        let(:quality) { 50 }
+        let(:sell_in) { -1 }
+
+        it 'does not change quality' do
+          expect(item.quality).to eq(50)
+        end
+      end
     end
 
     context 'of Sulfuras, Hand of Ragnaros' do
