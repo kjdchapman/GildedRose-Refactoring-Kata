@@ -95,6 +95,18 @@ describe GildedRose do
         expect(items[0].quality).to eq quality + 2
       end
     end
+
+    context "when passed sell by date and quality is near maximum" do
+      let(:sell_in) { 0 }
+      let(:quality) { 49 }
+
+      it "does not increase quality past 50" do
+        items = [Item.new("Aged Brie", sell_in, quality)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to eq 50
+      end
+    end
   end
 
   describe "an item that increases in quality" do
