@@ -89,4 +89,27 @@ describe GildedRose do
       end
     end
   end
+
+  describe "an item that increases in quality" do
+    let(:sell_in) { 1 }
+    let(:quality) { 50 }
+
+    describe "aged brie" do
+      it "does not increase quality past 50" do
+        items = [Item.new("Aged Brie", sell_in, quality)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to eq 50
+      end
+    end
+
+    describe "backstage passes" do
+      it "does not increase quality past 50" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", sell_in, quality)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to eq 50
+      end
+    end
+  end
 end
