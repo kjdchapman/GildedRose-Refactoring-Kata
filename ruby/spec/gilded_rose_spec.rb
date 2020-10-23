@@ -88,6 +88,18 @@ describe GildedRose do
         expect(items[0].quality).to eq 11
       end
     end
+
+    context "with quality 10 and sell in 0" do
+      let(:sell_in) { 0 }
+      let(:quality) { 10 }
+
+      it "increases quality to 12" do
+        items = [Item.new("Aged Brie", sell_in, quality)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to eq 12
+      end
+    end
   end
 
   describe "an item that increases in quality" do
