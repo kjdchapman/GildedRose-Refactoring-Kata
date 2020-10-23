@@ -10,19 +10,23 @@ describe GildedRose do
 
       expect(items[0].name).to eq "foo"
     end
+
+    it "does not reduce quality below zero" do
+      _ = ""
+      past_sell_by_date = 0
+      minimum_quality = 0
+
+      items = [Item.new("", past_sell_by_date, minimum_quality)]
+      GildedRose.new(items).update_quality()
+
+      expect(items[0].quality).to eq minimum_quality
+    end
   end
 
   describe 'an item without a special name' do
     context 'with quality 0 and sell in 0' do
       let(:sell_in) { 0 }
       let(:quality) { 0 }
-
-      it "does not reduce quality below zero" do
-        items = [Item.new("foo", sell_in, quality)]
-        GildedRose.new(items).update_quality()
-
-        expect(items[0].quality).to be_zero
-      end
 
       it "continues to reduce sell in below zero" do
         items = [Item.new("foo", sell_in, quality)]
