@@ -13,6 +13,13 @@ describe GildedRose do
 
         expect(items[0].name).to eq "foo"
       end
+
+      it "does not reduce quality below zero" do
+        items = [Item.new("foo", sell_in, quality)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to be_zero
+      end
     end
 
     context do
