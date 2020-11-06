@@ -121,6 +121,68 @@ describe GildedRose do
     end
   end
 
+  describe 'an item named "Backstage passes to a TAFKAL80ETC concert"' do
+    context "when it has eleven sell in days left" do
+      let(:sell_in) { 11 }
+      let(:quality) { 10 }
+
+      it "increases quality by 1" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", sell_in, quality)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to eq quality + 1
+      end
+    end
+
+    context "when it has ten sell in days left" do
+      let(:sell_in) { 10 }
+      let(:quality) { 10 }
+
+      it "increases quality by 2" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", sell_in, quality)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to eq quality + 2
+      end
+    end
+
+    context "when it has five sell in days left" do
+      let(:sell_in) { 5 }
+      let(:quality) { 10 }
+
+      it "increases quality by 3" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", sell_in, quality)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to eq quality + 3
+      end
+    end
+
+    context "when it has one sell in days left" do
+      let(:sell_in) { 1 }
+      let(:quality) { 10 }
+
+      it "increases quality by 3" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", sell_in, quality)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to eq quality + 3
+      end
+    end
+
+    context "when it has zero sell in days left" do
+      let(:sell_in) { 0 }
+      let(:_) { 10 }
+
+      it "decreases quality to 0" do
+        items = [Item.new("Backstage passes to a TAFKAL80ETC concert", sell_in, _)]
+        GildedRose.new(items).update_quality()
+
+        expect(items[0].quality).to be_zero
+      end
+    end
+  end
+
   describe "an item that increases in quality" do
     let(:sell_in) { 1 }
     let(:quality) { 50 }
