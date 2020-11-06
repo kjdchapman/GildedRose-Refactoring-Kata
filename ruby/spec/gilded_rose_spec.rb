@@ -71,6 +71,18 @@ describe GildedRose do
     end
   end
 
+  describe 'an item named "Sulfuras, Hand of Ragnaros"' do
+    let(:_) { 0 }
+    let(:quality) { 80 }
+
+    it "stays at quality 80" do
+      items = [Item.new("Sulfuras, Hand of Ragnaros", _, quality)]
+      GildedRose.new(items).update_quality()
+
+      expect(items[0].quality).to eq 80
+    end
+  end
+
   describe 'an item named "aged brie"' do
     context "when it has sell in days left" do
       let(:sell_in) { 1 }
@@ -107,17 +119,17 @@ describe GildedRose do
         expect(items[0].quality).to eq 50
       end
     end
-  end
 
-  describe 'an item named "Sulfuras, Hand of Ragnaros"' do
-    let(:_) { 0 }
-    let(:quality) { 80 }
+    context "when the quality is 50" do
+      let(:_) { 1 }
+      let(:quality) { 50 }
 
-    it "stays at quality 80" do
-      items = [Item.new("Sulfuras, Hand of Ragnaros", _, quality)]
-      GildedRose.new(items).update_quality()
+      it "does not increase quality past 50" do
+        items = [Item.new("Aged Brie", _, quality)]
+        GildedRose.new(items).update_quality()
 
-      expect(items[0].quality).to eq 80
+        expect(items[0].quality).to eq 50
+      end
     end
   end
 
@@ -181,22 +193,11 @@ describe GildedRose do
         expect(items[0].quality).to be_zero
       end
     end
-  end
 
-  describe "an item that increases in quality" do
-    let(:sell_in) { 1 }
-    let(:quality) { 50 }
+    context "when the quality is 50" do
+      let(:sell_in) { 1 }
+      let(:quality) { 50 }
 
-    describe "aged brie" do
-      it "does not increase quality past 50" do
-        items = [Item.new("Aged Brie", sell_in, quality)]
-        GildedRose.new(items).update_quality()
-
-        expect(items[0].quality).to eq 50
-      end
-    end
-
-    describe "backstage passes" do
       it "does not increase quality past 50" do
         items = [Item.new("Backstage passes to a TAFKAL80ETC concert", sell_in, quality)]
         GildedRose.new(items).update_quality()
