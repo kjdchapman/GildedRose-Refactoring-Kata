@@ -22,22 +22,18 @@ class GildedRose
         end
       end
 
-      if (item.name == 'Aged Brie') || (item.name == 'Backstage passes to a TAFKAL80ETC concert')
+      if item.name == 'Backstage passes to a TAFKAL80ETC concert'
         if item.quality < 50
-          if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-            if item.sell_in < 11
-              item.quality = item.quality + 1
-            end
+          if item.sell_in < 11
+            item.quality = item.quality + 1
           end
         end
       end
 
-      if (item.name == 'Aged Brie') || (item.name == 'Backstage passes to a TAFKAL80ETC concert')
+      if item.name == 'Backstage passes to a TAFKAL80ETC concert'
         if item.quality < 50
-          if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-            if item.sell_in < 6
-              item.quality = item.quality + 1
-            end
+          if item.sell_in < 6
+            item.quality = item.quality + 1
           end
         end
       end
