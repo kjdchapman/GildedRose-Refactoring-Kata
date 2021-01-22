@@ -25,32 +25,22 @@ class GildedRose
       end
 
       if item.name == 'Aged Brie'
-        if item.quality < 50
-          item.quality = item.quality + 1
-        end
+        increase_quality(item)
 
         if item.sell_in < 1
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
+          increase_quality(item)
         end
       end
 
       if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-        if item.quality < 50
-          item.quality = item.quality + 1
-        end
+        increase_quality(item)
 
         if item.sell_in < 11
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
+          increase_quality(item)
         end
 
         if item.sell_in < 6
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
+          increase_quality(item)
         end
 
         if item.sell_in < 1
@@ -62,6 +52,12 @@ class GildedRose
         item.sell_in -= 1
       end
     end
+  end
+
+  def increase_quality(item)
+    return if item.quality >= 50
+
+    item.quality += 1
   end
 end
 
